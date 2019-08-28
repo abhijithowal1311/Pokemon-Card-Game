@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <style>
+    ul {
+    list-style-type: none;
+    
+    display: inline-flex; 
+     }
+
+li {
+    font-weight:bold;
+    padding: 30px;
+    border:10px solid black;
+    color:white;
+    margin: 10px;
+    background: #433e4c;
+}
+.active{
+  animation-duration: 1s ;
+  animation-name: slidein;
+}
+
+
+
+@keyframes slidein {
+
+    30%{
+        transform: scale(1.2);
+    }
+
+    
+    100% {
+        transform: scale(1.0);
+    }
+
+    /* 10%, 90% {
+    transform: translate3d(-3px, 0, 0);
+  }
+  
+  20%, 80% {
+    transform: translate3d(4px, 0, 0);
+  } */
+
+
+  
+}
+.v-enter-active{
+    animation: bounceIn 2s
+}
+.v-leave{
+    animation: bounceIn 2s reverse;
+}
+@keyframes bounceIn {
+  0%{
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  60%{
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100%{
+    transform:1;
+  }
+}
+
+.msg{
+    animation-name: msganimate;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes msganimate {
+  0%{
+    transform: scale(0.6);
+    
+  }
+  
+  50%{
+      transform: scale(1.01);
+  }
+  100%{
+      transform: scale(0.6);
+  }
+}
+
+
+
+.table {
+	display: table;   /* Allow the centering to work */
+	margin: 0 auto;
+}
+
+.myturn{
+    opacity: 0.5;
+}
+
+
+    </style>
+</head>
+<body>
+    
+    <div id="app">
+            
+            <div class="container-fluid" style="background: #000">
+                <div class="row">
+                    <div class="col-12">
+                        
+                        <transition appear>
+                        <center>
+                            
+                            <h2 class="msg" v-if='msgload' style="background: #000;color:white" >{{message}}</h2></center>
+                        </transition>
+                    </div>
+                </div>
+            </div>
+          
+            <div class="container-fluid" v-if='matchover'>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <center> <h2 v-if='winner'>You are the winner</h2>
+                                <h2 v-if='!winner'>You Lose!!Sorry!</h2>
+                                
+                        </center>
+                    </div> 
+                </div>
+
+            </div>
+                <div class="container-fluid" v-if='ishidden3'>
+                    <div class="row">
+                        <div class="col-lg-8" v-bind:class="{myturn : isMyTurn}"  style="background: #43ffff">
+                                <center>
+                                <transition appear>
+                                        <div class="container-fluid" v-bind:class="{active:isActive}" v-if="ishidden3" style="min-height:350px;background: #000;width: 200px;margin: 20px">
+                                             <center>
+                                                 <div class="row">
+                                                     <div class="col-lg-12">
+                                                         <center>
+                                                                <img style="border: 1px solid black" v-bind:src='currentcard.url' height="150px" width="150px">
+                                                         </center>
+                                                     </div>
+                                                 </div>
+                                                 <div class="row">
+            
+                                                    <div class="col-lg-12">
+                                                    <center>
+                                                     <h4    style="padding-top: 30px;padding-bottom: 30px;background:#43ffff;margin: 10px;">
+                                                        {{currentcard.name}}
+                                                    </h4>
+                                                    </center>
+                                                </div>    
+                                                 </div>  
+                                                   
+                                                 <div class="row" v-on:click='select("rank")'  v-bind:style="{ background: rankbackground}" style="background: #43ffff;margin-bottom:2px;border: 1 px solid black;">
+                                                        <div class="col-lg-6">
+                                                              <h6 style="color: #989898">Rank</h6>  
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <h6 style="color:#989898">
+                                                                    {{currentcard.rank}}
+                                                            </h6>
+                                                        </div>
+                                                     </div>
+                                                 <div class="row" v-on:click='select("hp")'  v-bind:style="{ background: hpbg}" style="background: #43ffff;margin-bottom:2px;border: 1 px solid black;">
+                                                    <div class="col-lg-6">
+                                                          <h6 style="color:#989898">HP</h6>  
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <h6 style="color:#989898">
+                                                                {{currentcard.hp}}
+                                                        </h6>
+                                                    </div>
+                                                 </div>
+                                                   
+                                                 <div class="row" v-on:click='select("height")'  v-bind:style="{ background: htbg}" style="background: #43ffff;margin-bottom:2px;border: 1 px solid black;">
+                                                        <div class="col-lg-6">
+                                                              <h6 style="color:#989898">Height</h6>  
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <h6 style="color:#989898">
+                                                                    {{currentcard.height}}
+                                                            </h6>
+                                                        </div>
+                                                     </div>
+                                                       
+                                                 <div class="row" v-on:click='select("weight")'  v-bind:style="{ background: wtbg}" style="background: #43ffff;margin-bottom:2px;border: 1 px solid black;">
+                                                        <div class="col-lg-6">
+                                                              <h6 style="color:#989898">Weight</h6>  
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <h6 style="color:#989898">
+                                                                {{currentcard.weight}}
+                                                            </h6>
+                                                        </div>
+                                                     </div>
+                                                     
+
+                                                 
+                                            </center>
+                                            </div>
+                                        
+                                            
+                                            </transition>  
+                                        </center>
+                                        <center><button :disabled='turn' style="margin: 20px;"v-on:click='log()'>Play Your Card</button>
+                                        </center>      
+                                         
+                        </div>
+                        <div class="col-lg-4" style="background: cadetblue;">
+                              <center>       
+                            <div class="container-fluid" v-bind:class="{'myturn': !isMyTurn}" v-if="ishidden3" style="height:350px;background: #000;width: 200px;margin: 20px">
+                                    <center>
+                                    <div class="row" >
+                                        <div class="col-lg-12" style="display: table; width: 100%">
+                                            <center>
+                                                <h1 style="color: white" style="vertical-align: middle;display: table-cell ">?</h1>
+                                            </center>   
+                                        </div>
+                                            
+                                    </div>
+                                </center>
+                                </div>  
+                            </center>  
+                         </div>
+                            
+                        </div>
+                    </div>
+                    
+            <div class="container-fluid">
+
+                    <div class="row">
+                          <div class="col-lg-8" style="background: #43ff66;overflow-x:scroll" v-if='ishidden3'>
+                            
+                            <div class="table">
+                                 <center>
+                             <transition appear>
+                                <ul v-if='ishidden3'>
+                                        <li v-for="card in cards" >
+                                            
+                                            {{card.name}} 
+                                        
+                                      </li>
+                                  </ul> 
+                               </transition>       
+                                </center>
+                                </div>
+                            </div>
+                            
+                          <div class="col-lg-4" style="background: #407fff;overflow-x:scroll" v-if='ishidden3'>
+                                <div class="table">
+                                    <center>
+                                   <transition appear>     
+                                   <ul v-if='ishidden3'>
+                                           <li v-for="user2card in user2cards" v-on:click="log(card)">
+                                           {{user2card}}
+                                         </li>
+                                     </ul> 
+                                    </transition>
+                                   </center>
+                                   </div>
+                               </div>
+                        </div>
+                    </div>
+                    <p>{{waitingmsg}}</p>
+                    <form @submit="joingroup" v-if='!ishidden'>
+                        <input v-model='username'>
+                        <button>Join Group</button>
+                    </form>
+                    
+                </div>  
+              
+
+        
+        
+    
+    
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>  
+    <script>  
+        var socket= io();
+
+
+        
+        var app = new Vue({
+                el: '#app',
+                data: {
+                    matchover: false,
+                    winner : false,
+                    name: '',
+                    isActive:false,
+                    rankbackground : '#000',
+                    hpbg:'#000',
+                    msgload : true,
+                    wtbg:'#000',
+                    htbg : '#000',
+                    username : '',
+                    messages: [],
+                    isMyTurn : false,
+                    message : 'Play With Other Users!',
+                    channelname : 'You are Not connected',
+                    waitingmsg : '',
+                    cards: [],
+                    currentcard :'',
+                    propertychoosen:'',
+                    selected: '',
+                    user2cards: ['?','?','?','?','?'],
+                    ishidden : false,
+                    ishidden2 : false,
+                    ishidden3 : false,
+                    turn: true,
+                    
+                },
+
+
+                mounted: function () {
+                this.$nextTick(function () {
+                    console.log(socket.id);
+                    socket.on('new room',function(data){
+                           var foundusername= data.search(this.username); 
+                           console.log(foundusername);
+                           if(foundusername != -1){
+                            var messagenew=   data.replace(this.username,'me');
+                           this.messages.push(messagenew);
+                            }else{
+                                this.messages.push(data);
+                            }
+                           this.name = '';
+                    }.bind(this))
+
+
+                    socket.on('current channel',function(data){
+                           this.channelname = data;
+                    }.bind(this))
+
+
+                    socket.on('get cards',function(data){
+                        
+                        console.log('my usernumber is lit'+this.usernumber);
+                           this.cards = data; 
+                           this.currentcard = data[0];
+                    }.bind(this))
+
+
+                    socket.on('wait',function(data){                            
+                            
+                            this.waitingmsg = data;
+
+                            console.log(this.waitingmsg);
+                    }.bind(this))
+
+
+                    socket.on('clear',function(data){
+                            this.ishidden2 = true;    
+                            this.ishidden3 = true; 
+                            this.waitingmsg = '';
+                    }.bind(this))
+
+
+                    socket.on('pick',function(data){
+                            
+                            this.turn = data;
+                            console.log('we got the boolean'+data);
+                            var boolean = !data;
+                            if(this.turn == true){
+                                   this.isMyTurn = true; 
+                                   this.message = "Your Opponent's Turn";
+
+                            }else{
+                                this.message = 'Your Turn';
+                                   
+                                this.isMyTurn = false;
+                            }
+                            socket.emit('user2turnget',{user:this.username,channel:this.channelname,boolean:boolean})
+                    }.bind(this))
+                   
+                    
+                    socket.on('user2turn',function(data){
+                    
+                        if(data.user == this.username){
+
+                        }else{
+                            console.log(data.boolean+' we also got the boolean');
+                            this.turn = data.boolean;
+
+                            if(this.turn == true){
+                                   this.isMyTurn = true;
+                                   this.message = "Your Opponent's Turn";
+ 
+                            }else{
+                                this.message = 'Your Turn';
+                               
+                                this.isMyTurn = false;
+                            }
+                        }
+
+                    }.bind(this))
+                    
+
+                    socket.on('compare',function(data){
+                        this.rankbackground = '#000';
+                        this.hpbg = '#000';
+                       this.wtbg= '#000';
+                       this.htbg = '#000';
+                        if(data.user == this.username){
+                            
+                        }else{
+                            
+                            if(data.property== 'rank'){
+                                if(this.currentcard[data.property]<data.card[data.property]){
+                                    this.cards.push(data.card);
+                                    this.cards.splice(0,1);
+                                    this.cards.push(this.currentcard);
+                                    this.currentcard = this.cards[0];
+                                    socket.emit('win',{user:this.username,channel:this.channelname})
+                                }
+                                else{
+
+
+                                    socket.emit('lost',{user:this.username,channel:this.channelname,card:this.currentcard})
+                                    this.cards.splice(0,1);
+                                    if(this.cards.length == 0){
+                                        socket.emit('game over',{user:this.username,channel:this.channelname});
+                                        this.turn = true;
+                                        console.log("NOOO WE HAVE LOST!!!");
+
+                                ishidden=false;
+                                    }else{
+                                        this.currentcard = this.cards[0];
+                                    }
+                                    
+                                }    
+                            }else{
+                                //console.log(data.card[data.property]+' we have the property');
+                                if(this.currentcard[data.property]>data.card[data.property]){
+                                    this.cards.push(data.card);
+                                    this.cards.splice(0,1);
+                                    this.cards.push(this.currentcard);
+                                    this.currentcard = this.cards[0];
+                                    socket.emit('win',{user:this.username,channel:this.channelname})
+                                }else if(this.currentcard[data.property] == data.card[data.property]){
+                                    
+                                    this.cards.push(this.currentcard);
+                                    this.cards.splice(0,1);
+                                    this.currentcard = this.cards[0];
+                                    socket.emit('tie',{user:this.username,channel:this.channelname})
+                                }
+                                else{
+                                    socket.emit('lost',{channel:this.channelname,user:this.username,card:this.currentcard})
+                                    this.cards.splice(0,1);
+                                    if(this.cards.length == 0){
+                                        this.turn = true;
+                                        socket.emit('game over',{user:this.username,channel:this.channelname});
+                                        console.log("NOOO WE HAVE LOST!!!");
+                                        
+                                    }else{
+                                        this.currentcard = this.cards[0];
+                                    }
+                                    
+                                }     
+                            }
+                        }
+                    }.bind(this))
+
+                    socket.on('tie',function(data){
+                            console.log('it was a tie');
+                            if(this.username == data.user){
+
+                            }else{
+                                this.cards.push(this.currentcard);
+                                this.cards.splice(0,1);
+                                this.currentcard = this.cards[0];
+                            
+                            }
+                        }.bind(this))
+
+
+                    socket.on('win',function(data){
+                        if(this.username == data.user){
+                            this.turn =false;
+                            this.isMyTurn = false;
+                            this.message = 'Your Turn';
+                               
+                            
+                        }else{
+                            if(this.cards.length == 0)
+                            {
+                                this.ishidden3 = false;
+                                this.ishidden2=false;
+                                this.ishidden=false;
+                                console.log('we lost! what the fuck!');
+                            }
+                            this.message = "Your Opponent's Turn";
+                               
+                            this.turn=true;
+                            this.isMyTurn = true;
+                            this.cards.splice(0,1);
+                            this.currentcard = this.cards[0];
+                            
+                        }
+                    }.bind(this))
+
+                    
+                    socket.on('lost',function(data){
+                        if(this.username == data.user){
+                                this.isMyTurn = true;
+                                this.turn=true;
+                                this.message = "Your Opponent's Turn";
+                               
+                        }else{
+                            if(this.cards.length == 0){
+                                this.ishidden3 = false;
+                                this.ishidden2=false;
+                                this.ishidden=false;
+                                console.log('we lost! what the fuck!');
+                            }
+                            
+                            this.message = "Your Turn";
+                            this.isMyTurn = false;
+                            this.turn=false;
+                            this.cards.push(data.card);
+                            this.cards.splice(0,1);
+                            this.cards.push(this.currentcard);
+                            this.currentcard = this.cards[0];
+                        }
+                    }.bind(this))
+                    
+
+                socket.on('match over',function(data){
+                    setTimeout(function(){ 
+
+                    console.log('match is over');
+                    app.$forceUpdate();
+                    this.message = 'The Match Is Over!'
+                    this.matchover = true;
+                    this.ishidden3 = false;
+                    this.ishidden2 = false;
+                    this.turn = true;
+                    if(this.username == data.user){
+                        console.log(data.user);
+                        this.winner = false;
+                    }else{
+
+                        this.winner =true;  
+
+                        console.log('looser!!!'+data.user); 
+                        this.turn =true;
+                    }
+
+
+                       }.bind(this), 400);
+                   
+                }.bind(this))
+                })
+
+                },
+                methods: {
+                    send: function(e){    
+                        socket.emit('new room chat',{message1:this.name,room:this.channelname,user:this.username});
+                        e.preventDefault();
+                    },
+                    joingroup: function(e){    
+                        this.ishidden = true;
+                        socket.emit('new room',this.username);
+                        e.preventDefault();
+                    },
+                    log: function(){
+
+                       // var index = this.cards.indexOf(card);
+                       //use later console.log(this.cards.splice(index,1));
+                       socket.emit('compare',{channel:this.channelname,card:this.currentcard,property:this.propertychoosen,propertystat:this.selected,user:this.username})
+                       this.rankbackground = '#000';
+                       this.hpbg = '#000';
+                       this.wtbg= '#000';
+                       this.htbg = '#000';
+                       app.$forceUpdate();
+                   
+                    },
+                    select: function(property){
+                        this.isActive = !this.isActive;
+                        setTimeout(function(){ this.isActive =!this.isActive;    }.bind(this), 300);
+                        if(property == 'rank'){
+                            this.rankbackground = '#fff';
+                            this.propertychoosen = 'rank';
+                            this.hpbg = '#000';
+                            this.wtbg = '#000';
+                            this.htbg = '#000';
+                        }else if(property == 'hp'){
+                            this.propertychoosen = 'hp';
+                            this.rankbackground = '#000';
+                            this.hpbg = '#fff';
+                            this.wtbg = '#000';
+                            this.htbg = '#000';
+                        }else if(property == 'weight'){
+                            this.propertychoosen = 'weight';
+                            this.rankbackground = '#000';
+                            this.hpbg = '#000';
+                            this.wtbg = '#fff';
+                            this.htbg = '#000';
+                        }else if(property == 'height'){
+                            this.propertychoosen = 'height';
+                            this.rankbackground = '#000';
+                            this.hpbg = '#000';
+                            this.wtbg = '#000';
+                            this.htbg = '#fff';
+                        }
+                        console.log(property);  
+                        this.selected = property;
+                    }
+                }
+            })
+    </script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  
+</body>
+
+
+</html>
